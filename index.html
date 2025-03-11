@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bike Rental</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 100%;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .rent-btn {
+            background-color: blue;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .hidden {
+            display: none;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚲 เช่ารถจักรยาน</h1>
+    <button class="rent-btn" onclick="showBookingForm()">เช่าจักรยาน</button>
+    <a href="rental_dashboard.html">📋 ดูรายการจอง</a>
+    
+    <div id="rental-form" class="hidden">
+        <h2>รายละเอียดการจอง</h2>
+        <form id="booking-form">
+            <label>หมายเลขหรือสีจักรยาน:</label>
+            <input type="text" id="bike-details" required>
+            
+            <label>ชื่อ:</label>
+            <input type="text" id="customer-name" required>
+            
+            <label>เบอร์โทร:</label>
+            <input type="tel" id="phone-number" required>
+            
+            <label>วิธีชำระเงิน:</label>
+            <select id="payment-method" onchange="toggleSlipUpload()">
+                <option value="cash">เงินสด</option>
+                <option value="transfer">โอนเงิน</option>
+            </select>
+            
+            <div id="slip-upload" class="hidden">
+                <label>แนบสลิป:</label>
+                <input type="file" id="payment-slip">
+            </div>
+            
+            <button type="submit">ยืนยันการจอง</button>
+        </form>
+    </div>
+    
+    <script>
+        function showBookingForm() {
+            document.getElementById("rental-form").classList.remove("hidden");
+        }
+
+        function toggleSlipUpload() {
+            const method = document.getElementById("payment-method").value;
+            document.getElementById("slip-upload").classList.toggle("hidden", method !== "transfer");
+        }
+
+        document.getElementById("booking-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const bikeDetails = document.getElementById("bike-details").value;
+            const name = document.getElementById("customer-name").value;
+            const phone = document.getElementById("phone-number").value;
+            const method = document.getElementById("payment-method").value;
+            const timestamp = new Date().toLocaleString();
+            
+            const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+            bookings.push({ bikeDetails, name, phone, method, timestamp });
+            localStorage.setItem("bookings", JSON.stringify(bookings));
+            
+            alert("การจองสำเร็จ!");
+            document.getElementById("rental-form").classList.add("hidden");
+        });
+    </script>
+</body>
+</html>
