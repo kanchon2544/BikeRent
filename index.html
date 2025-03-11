@@ -34,7 +34,7 @@
 <body>
     <h1>🚲 เช่ารถจักรยาน</h1>
     <button class="rent-btn" onclick="showBookingForm()">เช่าจักรยาน</button>
-    <a href="rental_dashboard.html">📋 ดูรายการจอง</a>
+    <a href="rental_dashboard.html">🗋l ดูรายการจอง</a>
     
     <div id="rental-form" class="hidden">
         <h2>รายละเอียดการจอง</h2>
@@ -54,6 +54,11 @@
                 <option value="transfer">โอนเงิน</option>
             </select>
             
+            <div id="cash-amount-container" class="hidden">
+                <label>จำนวนเงินสด:</label>
+                <input type="number" id="cash-amount" placeholder="กรอกจำนวนเงิน">
+            </div>
+            
             <div id="slip-upload" class="hidden">
                 <label>แนบสลิป:</label>
                 <input type="file" id="payment-slip">
@@ -71,6 +76,7 @@
         function toggleSlipUpload() {
             const method = document.getElementById("payment-method").value;
             document.getElementById("slip-upload").classList.toggle("hidden", method !== "transfer");
+            document.getElementById("cash-amount-container").classList.toggle("hidden", method !== "cash");
         }
 
         document.getElementById("booking-form").addEventListener("submit", function(event) {
@@ -79,10 +85,11 @@
             const name = document.getElementById("customer-name").value;
             const phone = document.getElementById("phone-number").value;
             const method = document.getElementById("payment-method").value;
+            const cashAmount = document.getElementById("cash-amount").value;
             const timestamp = new Date().toLocaleString();
             
             const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
-            bookings.push({ bikeDetails, name, phone, method, timestamp });
+            bookings.push({ bikeDetails, name, phone, method, cashAmount, timestamp });
             localStorage.setItem("bookings", JSON.stringify(bookings));
             
             alert("การจองสำเร็จ!");
